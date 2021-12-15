@@ -12,10 +12,19 @@ const readContent = async () => {
 };
 
 const listContacts = async () => {
-  return await readContent();
+  const result = await readContent();
+  return { contacts: result, status: 200 };
 };
 
-const getContactById = async contactId => {};
+const getContactById = async contactId => {
+  const contacts = await readContent();
+  const contact = contacts.find(elem => elem.id === Number(contactId));
+  if (contact !== void 0) {
+    return { contact, status: 200 };
+  } else {
+    return { message: 'Not found', status: 404 };
+  }
+};
 
 const removeContact = async contactId => {};
 
