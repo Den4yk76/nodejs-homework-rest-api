@@ -29,15 +29,45 @@ router.get('/:contactId', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-  res.json({ message: 'post contact method' });
+  const { name, email, phone } = req.body;
+  if (name && email && phone) {
+    const { newContact, status } = await addContact({
+      name,
+      email,
+      phone,
+    });
+    res.status(status).json({ contact: newContact, status });
+  } else {
+    res
+      .status(400)
+      .json({ message: 'missing required name field', status: 400 });
+  }
 });
 
 router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'delete contactId method' });
+  const { message, status } = await removeContact(req.params.contactId);
+  if (status === 200) {
+    res.status(status).json({ message: message });
+  } else {
+    res.status(status).json({ message: message });
+  }
 });
 
 router.patch('/:contactId', async (req, res, next) => {
-  res.json({ message: 'patch contactId method' });
+  const { name, email, phone } = req.body;
+  if (!name && !email && !phone) {
+    res.status(400).json({ message: 'missing fields' });
+  } else {
+    const { updatedContact, message, status } = await updateContact(
+      req.params.contactId,
+      req.body,
+    );
+    if (status === 200) {
+      res.status(status).json({ updatedContact, status });
+    } else {
+      res.status(status).json({ message, status });
+    }
+  }
 });
 
 module.exports = router;
