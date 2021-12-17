@@ -9,65 +9,36 @@ const {
 } = require('../../model/index.js');
 
 router.get('/', async (req, res, next) => {
-  const result = await listContacts();
-  if (result.contacts) {
-    res
-      .status(result.status)
-      .json({ contacts: result.contacts, status: result.status });
-  } else {
-    res.status(400).json({ Error: result.error });
-  }
+  const contacts = await listContacts();
+  res.status(200).json(contacts);
 });
 
 router.get('/:contactId', async (req, res, next) => {
-  const { message, status, contact } = await getContactById(
-    req.params.contactId,
-  );
+  const { contactId } = req.params;
+  const contact = await getContactById(contactId);
   if (contact) {
-    res.status(status).json({ contact: contact, status: status });
-  } else res.status(status).json({ message: message, status: status });
+    res.status(200).json(contact);
+  } else res.status(404).json({ message: 'Not found' });
 });
 
 router.post('/', async (req, res, next) => {
-  const { name, email, phone } = req.body;
-  if (name && email && phone) {
-    const { newContact, status } = await addContact({
-      name,
-      email,
-      phone,
-    });
-    res.status(status).json({ contact: newContact, status });
-  } else {
-    res
-      .status(400)
-      .json({ message: 'missing required name field', status: 400 });
-  }
+  const newContact = await addContact(req.body);
+  res.status(201).json(newContact);
 });
 
 router.delete('/:contactId', async (req, res, next) => {
-  const { message, status } = await removeContact(req.params.contactId);
-  if (status === 200) {
-    res.status(status).json({ message: message });
-  } else {
-    res.status(status).json({ message: message });
-  }
+  const removedContact = await removeContact(req.params.contactId);
+  if (removedContact) {
+    res.status(200).json({ message: 'contact deleted' });
+  } else res.status(404).json({ message: 'Not found' });
 });
 
-router.patch('/:contactId', async (req, res, next) => {
-  const { name, email, phone } = req.body;
-  if (!name && !email && !phone) {
-    res.status(400).json({ message: 'missing fields' });
-  } else {
-    const { updatedContact, message, status } = await updateContact(
-      req.params.contactId,
-      req.body,
-    );
-    if (status === 200) {
-      res.status(status).json({ updatedContact, status });
-    } else {
-      res.status(status).json({ message, status });
-    }
-  }
+router.put('/:contactId', async (req, res, next) => {
+  const { contactId } = req.params;
+  const contact = await updateContact(contactId, req.body);
+  if (contact) {
+    res.status(200).json({ contact });
+  } else res.status(404).json({ message: 'Not founded' });
 });
 
 module.exports = router;

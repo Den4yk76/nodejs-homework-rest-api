@@ -1,11 +1,5 @@
 [
   {
-    "id": 2,
-    "name": "Nazarenk",
-    "email": "denysnazarenko23@mail.com",
-    "phone": "097-020-8888"
-  },
-  {
     "id": 3,
     "name": "Kennedy Lane",
     "email": "mattis.Cras@nonenimMauris.net",
@@ -54,9 +48,9 @@
     "phone": "(748) 206-2688"
   },
   {
-    "id": "f274f360-6c64-4cd4-aceb-d35d697975e4",
+    "id": "aed7924d-d9c7-4475-8ead-7bd132743a3a",
     "name": "Denys Nazarenko",
-    "email": "denysnazarenko23@mail.com",
-    "phone": "097-020-8888"
+    "email": "denysnazarenko@mail.com",
+    "phone": "098-888-8888"
   }
 ]
