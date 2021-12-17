@@ -1,9 +1,9 @@
-const { uuid } = require('uuidv4');
+const { v4: uuidv4 } = require('uuid');
 const fs = require('fs/promises');
-// const contacts = require('./contacts.json');
 const path = require('path');
-const e = require('cors');
-const { constants } = require('buffer');
+// const contacts = require('./contacts.json');
+// const e = require('cors');
+// const { constants } = require('buffer');
 
 const readContent = async () => {
   const content = await fs.readFile(
@@ -42,7 +42,7 @@ const removeContact = async contactId => {
 
 const addContact = async ({ name, email, phone }) => {
   const contacts = await readContent();
-  const newContact = { id: uuid(), name, email, phone };
+  const newContact = { id: uuidv4(), name, email, phone };
   contacts.push(newContact);
   await fs.writeFile(
     path.join(__dirname, 'contacts.json'),

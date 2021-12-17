@@ -7,6 +7,7 @@ const {
   addContact,
   updateContact,
 } = require('../../model/index.js');
+const { validateCreate, validateUpdate } = require('./validation');
 
 router.get('/', async (req, res, next) => {
   const contacts = await listContacts();
@@ -21,7 +22,7 @@ router.get('/:contactId', async (req, res, next) => {
   } else res.status(404).json({ message: 'Not found' });
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', validateCreate, async (req, res, next) => {
   const newContact = await addContact(req.body);
   res.status(201).json(newContact);
 });
@@ -33,7 +34,7 @@ router.delete('/:contactId', async (req, res, next) => {
   } else res.status(404).json({ message: 'Not found' });
 });
 
-router.put('/:contactId', async (req, res, next) => {
+router.put('/:contactId', validateUpdate, async (req, res, next) => {
   const { contactId } = req.params;
   const contact = await updateContact(contactId, req.body);
   if (contact) {

@@ -1,7 +1,7 @@
 [
   {
     "id": 3,
-    "name": "Kennedy Lane",
+    "name": "Kennedy John",
     "email": "mattis.Cras@nonenimMauris.net",
     "phone": "(542) 451-7038"
   },
@@ -42,15 +42,15 @@
     "phone": "(704) 398-7993"
   },
   {
-    "id": 10,
-    "name": "Alec Howard",
-    "email": "Donec.elementum@scelerisquescelerisquedui.net",
-    "phone": "(748) 206-2688"
-  },
-  {
     "id": "aed7924d-d9c7-4475-8ead-7bd132743a3a",
     "name": "Denys Nazarenko",
-    "email": "denysnazarenko@mail.com",
+    "email": "denysnazarenko@gmail.com",
     "phone": "098-888-8888"
+  },
+  {
+    "id": "be48acf2-fe4e-4159-b64b-dacd21195510",
+    "name": "John Cena",
+    "email": "cenaj@wwe.com",
+    "phone": "+1-749-1111"
   }
 ]
