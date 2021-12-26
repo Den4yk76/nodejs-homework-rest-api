@@ -3,7 +3,7 @@ import logger from 'morgan';
 import cors from 'cors';
 import { HttpCode } from './lib/constants.js';
 
-import contactsRouter from './routes/api/contacts/index.js';
+import contactsRouter from './routes/api/contacts';
 
 const app = express();
 

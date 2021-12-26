@@ -5,13 +5,13 @@ const getContacts = async (req, res, next) => {
   const contacts = await repositoryContacts.listContacts();
   res
     .status(HttpCode.OK)
-    .json({ status: 'success', code: HttpCode.OK, data: { ...contacts } });
+    .json({ status: 'success', code: HttpCode.OK, data: contacts });
 };
 
 const getContactById = async (req, res, next) => {
   const { id } = req.params;
   const contact = await repositoryContacts.getContactById(id);
-  console.log(contact); // toObject
+  // console.log(contact); // toObject
   if (contact) {
     return res
       .status(HttpCode.OK)

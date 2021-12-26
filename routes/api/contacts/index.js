@@ -5,7 +5,7 @@ import {
   addContact,
   removeContact,
   updateContact,
-} from '../../../controllers/contacts/index.js';
+} from '../../../controllers/contacts';
 
 import {
   validateCreate,

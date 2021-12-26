@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./bin/server.js",
-    "start:dev": "cross-env NODE_ENV=development nodemon -r dotenv/config ./bin/server.js",
+    "start:dev": "cross-env NODE_ENV=development nodemon -r dotenv/config  --experimental-specifier-resolution=node ./bin/server.js",
     "lint": "eslint **/*.js",
     "lint:fix": "eslint --fix **/*.js"
   },
