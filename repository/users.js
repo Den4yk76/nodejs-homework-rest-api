@@ -12,4 +12,9 @@ const create = async body => {
     const user = new User(body);
     return await user.save();
 };
-export default { findById, findByEmail, create };
+
+const updateToken = async (id, token) => {
+    return await User.updateOne({ _id: id }, { token });
+};
+
+export default { findById, findByEmail, create, updateToken };
