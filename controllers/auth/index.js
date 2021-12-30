@@ -9,15 +9,15 @@ const registration = async (req, res, next) => {
         return res.status(HttpCode.CONFLICT).json({
             status: 'error',
             code: HttpCode.CONFLICT,
-            message: 'Email is already exist',
+            message: 'Email in use',
         });
     }
     const data = await authService.create(req.body);
 
-    res.status(HttpCode.OK).json({
+    res.status(HttpCode.CREATED).json({
         status: 'success',
-        code: HttpCode.OK,
-        data,
+        code: HttpCode.CREATED,
+        user: data,
     });
 };
 const login = async (req, res, next) => {
@@ -34,10 +34,11 @@ const login = async (req, res, next) => {
     const token = authService.getToken(user);
     await authService.setToken(user.id, token);
 
+    const { subscription } = user;
     res.status(HttpCode.OK).json({
         status: 'success',
         code: HttpCode.OK,
-        data: { token },
+        data: { token, user: { email, subscription } },
     });
 };
 const logout = async (req, res, next) => {
@@ -49,4 +50,13 @@ const logout = async (req, res, next) => {
     });
 };
 
-export { registration, login, logout };
+const currentUser = async (req, res, next) => {
+    const { email, subscription } = req.user;
+    res.status(HttpCode.OK).json({
+        status: 'success',
+        code: HttpCode.OK,
+        data: { email, subscription },
+    });
+};
+
+export { registration, login, logout, currentUser };

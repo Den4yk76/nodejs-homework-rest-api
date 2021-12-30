@@ -1,12 +1,19 @@
 import { Router } from 'express';
 import guard from '../../../middlewares/guard';
-import { registration, login, logout } from '../../../controllers/auth';
+import {
+    registration,
+    login,
+    logout,
+    currentUser,
+} from '../../../controllers/auth';
 
 const router = new Router();
 
-router.post('/registration', registration);
+router.post('/signup', registration);
 router.post('/login', login);
 router.post('/logout', guard, logout);
-// router.post('/current');
+
+// TODO:
+router.post('/current', guard, currentUser);
 
 export default router;

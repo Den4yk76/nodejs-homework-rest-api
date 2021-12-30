@@ -8,8 +8,8 @@ class AuthService {
     }
 
     async create(body) {
-        const { id, name, email, role } = await Users.create(body);
-        return { id, name, email, role };
+        const { email, subscription } = await Users.create(body);
+        return { email, subscription };
     }
 
     async getUser(email, password) {
