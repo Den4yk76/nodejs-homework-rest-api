@@ -1,11 +1,21 @@
 import Contact from '../model/contact.js';
 
-const listContacts = async userId => {
+const listContacts = async (userId, { favorite, limit = 10 }) => {
+  let filterCriteria = null;
   const total = await Contact.find({ owner: userId }).countDocuments();
-  const result = await Contact.find({ owner: userId }).populate({
+  let result = await Contact.find({ owner: userId }).populate({
     path: 'owner',
     select: 'email',
   });
+  if (favorite) {
+    result = await Contact.find({
+      owner: userId,
+      favorite: [`${favorite}`],
+    }).populate({
+      path: 'owner',
+      select: 'email',
+    });
+  }
   return { total, contacts: result };
 };
 
@@ -32,10 +42,7 @@ const removeContact = async (userId, contactId) => {
 };
 
 const addContact = async (userId, body) => {
-  const result = await Contact.create({ ...body, owner: userId }).populate({
-    path: 'owner',
-    select: 'email',
-  });
+  const result = await Contact.create({ ...body, owner: userId });
   return result;
 };
 
