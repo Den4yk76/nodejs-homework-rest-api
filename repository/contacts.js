@@ -1,13 +1,16 @@
 import Contact from '../model/contact.js';
 
 const listContacts = async (userId, { favorite }) => {
-  let filterCriteria = null;
-  const total = await Contact.find({ owner: userId }).countDocuments();
+  let total = await Contact.find({ owner: userId }).countDocuments();
   let result = await Contact.find({ owner: userId }).populate({
     path: 'owner',
     select: 'email',
   });
   if (favorite) {
+    total = await Contact.find({
+      owner: userId,
+      favorite: [`${favorite}`],
+    }).countDocuments();
     result = await Contact.find({
       owner: userId,
       favorite: [`${favorite}`],

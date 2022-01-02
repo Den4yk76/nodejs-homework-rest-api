@@ -60,7 +60,6 @@ const currentUser = async (req, res, next) => {
 };
 
 const updateSubscription = async (req, res, next) => {
-  //TODO: VALIDATION
   const { email, id } = req.user;
   const { subscription } = req.body;
   await authService.setSubscription(id, subscription);
