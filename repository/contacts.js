@@ -1,25 +1,32 @@
 import Contact from '../model/contact.js';
 
-const listContacts = async (userId, { favorite }) => {
-  let total = await Contact.find({ owner: userId }).countDocuments();
-  let result = await Contact.find({ owner: userId }).populate({
-    path: 'owner',
-    select: 'email',
-  });
+const listContacts = async (userId, { favorite, page = 1, limit = 10 }) => {
+  let total = Contact.find({ owner: userId }).countDocuments();
+  let result = Contact.find({ owner: userId });
   if (favorite) {
-    total = await Contact.find({
+    total = Contact.find({
       owner: userId,
       favorite: [`${favorite}`],
     }).countDocuments();
-    result = await Contact.find({
+    result = Contact.find({
       owner: userId,
       favorite: [`${favorite}`],
-    }).populate({
-      path: 'owner',
-      select: 'email',
     });
   }
-  return { total, contacts: result };
+
+  total = await total;
+  result = await result.populate({
+    path: 'owner',
+    select: 'email',
+  });
+
+  if (page > 0 && limit > 0) {
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    result = result.slice(startIndex, endIndex);
+  }
+
+  return { total, page, limit, contacts: result };
 };
 
 const getContactById = async (userId, contactId) => {

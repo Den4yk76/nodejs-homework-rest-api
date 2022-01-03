@@ -15,7 +15,6 @@ router.post('/signup', validateAuth, registration);
 router.post('/login', validateAuth, login);
 router.post('/logout', guard, logout);
 router.post('/current', guard, currentUser);
-// TODO: VALIDATION updateSubscription BODY
 router.patch('/', guard, validateUpdateSubscription, updateSubscription);
 
 export default router;
