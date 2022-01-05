@@ -1,6 +1,13 @@
 import Contact from '../model/contact.js';
 
 const listContacts = async (userId, { favorite, page = 1, limit = 10 }) => {
+  if (page <= 0 || parseInt(limit) <= 0) {
+    page = 1;
+    limit = 10;
+  }
+
+  const skipIndex = (page - 1) * parseInt(limit);
+
   let total = Contact.find({ owner: userId }).countDocuments();
   let result = Contact.find({ owner: userId });
   if (favorite) {
@@ -14,17 +21,11 @@ const listContacts = async (userId, { favorite, page = 1, limit = 10 }) => {
     });
   }
 
+  result = await result
+    .limit(parseInt(limit))
+    .skip(skipIndex)
+    .populate({ path: 'owner', select: 'email' });
   total = await total;
-  result = await result.populate({
-    path: 'owner',
-    select: 'email',
-  });
-
-  if (page > 0 && limit > 0) {
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    result = result.slice(startIndex, endIndex);
-  }
 
   return { total, page, limit, contacts: result };
 };
