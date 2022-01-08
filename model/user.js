@@ -54,7 +54,12 @@ userSchema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt(6);
     this.password = await bcrypt.hash(this.password, salt);
   }
-  const avatar = gravatar.url(this.email, { protocol: 'https', s: '100' });
+  const avatar = gravatar.url(this.email, {
+    protocol: 'https',
+    s: '250',
+    r: 'pg',
+    d: 'mm',
+  });
   this.avatarURL = avatar;
   next();
 });
