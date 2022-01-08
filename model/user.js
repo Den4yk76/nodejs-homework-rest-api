@@ -1,5 +1,6 @@
 import pkg from 'mongoose';
 import bcrypt from 'bcryptjs';
+import gravatar from 'gravatar';
 
 const { Schema, model } = pkg;
 
@@ -23,6 +24,7 @@ const userSchema = new Schema(
       enum: ['starter', 'pro', 'business'],
       default: 'starter',
     },
+    avatarURL: String,
     token: {
       type: String,
       default: null,
@@ -52,6 +54,8 @@ userSchema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt(6);
     this.password = await bcrypt.hash(this.password, salt);
   }
+  const avatar = gravatar.url(this.email, { protocol: 'https', s: '100' });
+  this.avatarURL = avatar;
   next();
 });
 
