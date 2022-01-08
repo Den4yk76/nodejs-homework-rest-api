@@ -16,6 +16,7 @@ app.use(express.json()); // json
 
 app.use('/api/users', authRouter);
 app.use('/api/contacts', contactsRouter);
+app.use('/avatars', express.static('public/avatars'));
 
 app.use((req, res) => {
   res.status(HttpCode.NOT_FOUND).json({
