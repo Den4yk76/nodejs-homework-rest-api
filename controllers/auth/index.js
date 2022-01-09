@@ -72,9 +72,11 @@ const updateSubscription = async (req, res, next) => {
 };
 
 const updateAvatar = async (req, res, next) => {
+  const avatarURL = await authService.updateAvatar(req.user.id, req.file);
   res.status(HttpCode.OK).json({
     status: 'success',
     code: HttpCode.OK,
+    avatarURL,
   });
 };
 
