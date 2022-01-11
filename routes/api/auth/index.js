@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const uploadMiddleware = multer({ storage });
+const uploadMiddleware = multer({ storage, limits: { fileSize: 500000 } });
 
 router.post('/signup', validateAuth, registration);
 router.post('/login', validateAuth, login);

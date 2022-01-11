@@ -20,6 +20,7 @@ const registration = async (req, res, next) => {
     user: data,
   });
 };
+
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   const user = await authService.getUser(email, password);
@@ -41,6 +42,7 @@ const login = async (req, res, next) => {
     data: { token, user: { email, subscription } },
   });
 };
+
 const logout = async (req, res, next) => {
   await authService.setToken(req.user.id, null);
   res.status(HttpCode.NO_CONTENT).json({
