@@ -19,19 +19,19 @@ app.use('/api/contacts', contactsRouter);
 app.use('/avatars', express.static('public/avatars'));
 
 app.use((req, res) => {
-  res.status(HttpCode.NOT_FOUND).json({
-    status: 'error',
-    code: HttpCode.NOT_FOUND,
-    message: 'Not found',
-  });
+    res.status(HttpCode.NOT_FOUND).json({
+        status: 'error',
+        code: HttpCode.NOT_FOUND,
+        message: 'Not found',
+    });
 });
 
 app.use((err, req, res, next) => {
-  res.status(HttpCode.INTERNAL_SERVER_ERROR).json({
-    status: 'fail',
-    code: HttpCode.INTERNAL_SERVER_ERROR,
-    message: err.message,
-  });
+    res.status(HttpCode.INTERNAL_SERVER_ERROR).json({
+        status: 'fail',
+        code: HttpCode.INTERNAL_SERVER_ERROR,
+        message: err.message,
+    });
 });
 
 export default app;
