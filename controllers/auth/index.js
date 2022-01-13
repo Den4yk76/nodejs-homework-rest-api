@@ -1,5 +1,9 @@
 import { HttpCode } from '../../lib/constants.js';
-import AuthService from '../../service/auth/index.js';
+import AuthService from '../../service/auth/';
+import {
+  UploadFileService,
+  LocalFileStorage,
+} from '../../service/file-storage';
 const authService = new AuthService();
 
 const registration = async (req, res, next) => {
@@ -20,6 +24,7 @@ const registration = async (req, res, next) => {
     user: data,
   });
 };
+
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   const user = await authService.getUser(email, password);
@@ -41,6 +46,7 @@ const login = async (req, res, next) => {
     data: { token, user: { email, subscription } },
   });
 };
+
 const logout = async (req, res, next) => {
   await authService.setToken(req.user.id, null);
   res.status(HttpCode.NO_CONTENT).json({
@@ -71,4 +77,27 @@ const updateSubscription = async (req, res, next) => {
   });
 };
 
-export { registration, login, logout, currentUser, updateSubscription };
+const uploadAvatar = async (req, res, next) => {
+  const uploadService = new UploadFileService(
+    LocalFileStorage,
+    req.file,
+    req.user,
+  );
+
+  const avatarUrl = await uploadService.updateAvatar();
+
+  res.status(HttpCode.OK).json({
+    status: 'success',
+    code: HttpCode.OK,
+    avatarUrl,
+  });
+};
+
+export {
+  registration,
+  login,
+  logout,
+  currentUser,
+  updateSubscription,
+  uploadAvatar,
+};

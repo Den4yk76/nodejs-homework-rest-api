@@ -1,30 +1,35 @@
 import User from '../model/user';
 
 const findById = async id => {
-  return await User.findById(id);
+    return await User.findById(id);
 };
 
 const findByEmail = async email => {
-  return await User.findOne({ email });
+    return await User.findOne({ email });
 };
 
 const create = async body => {
-  const user = new User(body);
-  return await user.save();
+    const user = new User(body);
+    return await user.save();
 };
 
 const updateToken = async (id, token) => {
-  return await User.updateOne({ _id: id }, { token });
+    return await User.updateOne({ _id: id }, { token });
 };
 
 const setSubscription = async (id, subscription) => {
-  return await User.updateOne({ _id: id }, { subscription });
+    return await User.updateOne({ _id: id }, { subscription });
+};
+
+const updateAvatar = async (userId, avatarUrl) => {
+    return await User.updateOne({ _id: userId }, { avatarUrl });
 };
 
 export default {
-  findById,
-  findByEmail,
-  create,
-  updateToken,
-  setSubscription,
+    findById,
+    findByEmail,
+    create,
+    updateToken,
+    setSubscription,
+    updateAvatar,
 };
