@@ -7,6 +7,12 @@ class AuthService {
         return !!user;
     }
 
+    async isUserWithToken(verificationToken) {
+        const user = await Users.findByToken(verificationToken);
+        console.log(user);
+        return !!user;
+    }
+
     async create(body) {
         const { email, subscription, avatarUrl } = await Users.create(body);
         return { email, subscription, avatarUrl };
@@ -34,6 +40,10 @@ class AuthService {
 
     async setSubscription(id, subscription) {
         await Users.setSubscription(id, subscription);
+    }
+
+    async verify() {
+        await Users.verify();
     }
 }
 
