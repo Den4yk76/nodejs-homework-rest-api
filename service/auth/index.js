@@ -9,13 +9,13 @@ class AuthService {
 
     async isUserWithToken(verificationToken) {
         const user = await Users.findByToken(verificationToken);
-        console.log(user);
-        return !!user;
+        return user;
     }
 
     async create(body) {
-        const { email, subscription, avatarUrl } = await Users.create(body);
-        return { email, subscription, avatarUrl };
+        const { email, subscription, avatarUrl, verificationToken } =
+            await Users.create(body);
+        return { email, subscription, avatarUrl, verificationToken };
     }
 
     async getUser(email, password) {
@@ -42,8 +42,8 @@ class AuthService {
         await Users.setSubscription(id, subscription);
     }
 
-    async verify() {
-        await Users.verify();
+    async verify(userId) {
+        await Users.verify(userId);
     }
 }
 

@@ -29,6 +29,13 @@ const updateAvatar = async (userId, avatarUrl) => {
     return await User.updateOne({ _id: userId }, { avatarUrl });
 };
 
+const verify = async userId => {
+    return await User.updateOne(
+        { _id: userId },
+        { verificationToken: null, verify: true },
+    );
+};
+
 export default {
     findById,
     findByEmail,
@@ -37,4 +44,5 @@ export default {
     updateToken,
     setSubscription,
     updateAvatar,
+    verify,
 };

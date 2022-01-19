@@ -29,7 +29,7 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await authService.getUser(email, password);
 
-    if (!user) {
+    if (!user || !user.verify) {
         return res.status(HttpCode.UNAUTHORIZED).json({
             status: 'error',
             code: HttpCode.UNAUTHORIZED,
@@ -97,17 +97,18 @@ const verification = async (req, res, next) => {
     const { verificationToken } = req.params;
 
     const user = await authService.isUserWithToken(verificationToken);
-    console.log(user);
 
     if (!user) {
-        res.status(HttpCode.NOT_FOUND).json({
+        return res.status(HttpCode.NOT_FOUND).json({
             status: 'fail',
             code: HttpCode.NOT_FOUND,
             message: 'User not found',
         });
     }
 
-    const verifiedUser = res.status(HttpCode.OK).json({
+    await authService.verify(user.id);
+
+    res.status(HttpCode.OK).json({
         status: 'success',
         code: HttpCode.OK,
         message: 'Verification successful',
