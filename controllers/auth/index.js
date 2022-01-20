@@ -1,6 +1,11 @@
 import { HttpCode } from '../../lib/constants.js';
 import AuthService from '../../service/auth/';
 import {
+    EmailService,
+    SenderNodemailer,
+    SenderSendGrid,
+} from '../../service/email';
+import {
     UploadFileService,
     LocalFileStorage,
 } from '../../service/file-storage';
@@ -16,12 +21,23 @@ const registration = async (req, res, next) => {
             message: 'Email in use',
         });
     }
-    const data = await authService.create(req.body);
 
+    const data = await authService.create(req.body);
+    const emailService = new EmailService(
+        process.env.NODE_ENV,
+        new SenderSendGrid(),
+    );
+
+    const isSend = await emailService.sendVerifyEmail(
+        email,
+        email,
+        data.verificationToken,
+    );
+    delete data.verificationToken;
     res.status(HttpCode.CREATED).json({
         status: 'success',
         code: HttpCode.CREATED,
-        user: data,
+        user: { ...data, isVerifyEmailSended: isSend },
     });
 };
 
@@ -29,11 +45,11 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await authService.getUser(email, password);
 
-    if (!user || !user.verify) {
+    if (!user) {
         return res.status(HttpCode.UNAUTHORIZED).json({
             status: 'error',
             code: HttpCode.UNAUTHORIZED,
-            message: 'Email or password is wrong',
+            message: 'Invalid credentials',
         });
     }
     const token = authService.getToken(user);
@@ -98,22 +114,23 @@ const verification = async (req, res, next) => {
 
     const user = await authService.isUserWithToken(verificationToken);
 
-    if (!user) {
-        return res.status(HttpCode.NOT_FOUND).json({
-            status: 'fail',
-            code: HttpCode.NOT_FOUND,
-            message: 'User not found',
+    if (user) {
+        await authService.verify(user.id);
+        return res.status(HttpCode.OK).json({
+            status: 'success',
+            code: HttpCode.OK,
+            message: 'Verification successful',
         });
     }
 
-    await authService.verify(user.id);
-
-    res.status(HttpCode.OK).json({
-        status: 'success',
-        code: HttpCode.OK,
-        message: 'Verification successful',
+    res.status(HttpCode.BAD_REQUEST).json({
+        status: 'error',
+        code: HttpCode.BAD_REQUEST,
+        message: 'Invalid verification token',
     });
 };
+
+const repeatVerificationEmail = async (req, res, next) => {};
 
 export {
     registration,
@@ -123,4 +140,5 @@ export {
     updateSubscription,
     uploadAvatar,
     verification,
+    repeatVerificationEmail,
 };
