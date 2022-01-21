@@ -27,6 +27,11 @@ class AuthService {
         return user;
     }
 
+    async findByEmail(email) {
+        const user = await Users.findByEmail(email);
+        return user;
+    }
+
     getToken(user) {
         const { id, email } = user;
         const payload = { id, email };

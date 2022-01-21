@@ -25,7 +25,7 @@ const registration = async (req, res, next) => {
     const data = await authService.create(req.body);
     const emailService = new EmailService(
         process.env.NODE_ENV,
-        new SenderSendGrid(),
+        new SenderNodemailer(),
     );
 
     const isSend = await emailService.sendVerifyEmail(
@@ -49,7 +49,7 @@ const login = async (req, res, next) => {
         return res.status(HttpCode.UNAUTHORIZED).json({
             status: 'error',
             code: HttpCode.UNAUTHORIZED,
-            message: 'Invalid credentials',
+            message: 'Wrong email, password or verification',
         });
     }
     const token = authService.getToken(user);
@@ -123,14 +123,59 @@ const verification = async (req, res, next) => {
         });
     }
 
-    res.status(HttpCode.BAD_REQUEST).json({
+    res.status(HttpCode.NOT_FOUND).json({
         status: 'error',
-        code: HttpCode.BAD_REQUEST,
-        message: 'Invalid verification token',
+        code: HttpCode.NOT_FOUND,
+        message: 'User not found',
     });
 };
 
-const repeatVerificationEmail = async (req, res, next) => {};
+const repeatVerificationEmail = async (req, res, next) => {
+    const { email } = req.body;
+    const user = await authService.findByEmail(email);
+    if (user) {
+        if (user.verify) {
+            return res.status(HttpCode.BAD_REQUEST).json({
+                status: 'error',
+                code: HttpCode.BAD_REQUEST,
+                message: 'Verification has already been passed',
+            });
+        }
+
+        const { email, verificationToken } = user;
+        const emailService = new EmailService(
+            process.env.NODE_ENV,
+            new SenderNodemailer(),
+        );
+
+        const isSend = await emailService.sendVerifyEmail(
+            email,
+            email,
+            verificationToken,
+        );
+
+        if (isSend) {
+            return res.status(HttpCode.OK).json({
+                status: 'success',
+                code: HttpCode.OK,
+                message: 'Success',
+                isVerifyEmailSended: isSend,
+            });
+        }
+
+        return res.status(HttpCode.UE).json({
+            status: 'error',
+            code: HttpCode.UE,
+            message: 'Unprocessable Entity',
+        });
+    }
+
+    return res.status(HttpCode.NOT_FOUND).json({
+        status: 'error',
+        code: HttpCode.NOT_FOUND,
+        message: 'User with email not found',
+    });
+};
 
 export {
     registration,

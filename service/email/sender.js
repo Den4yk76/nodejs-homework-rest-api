@@ -15,7 +15,7 @@ class SenderNodemailer {
             secure: true,
             auth: {
                 user: process.env.USER_NODEMAILER,
-                password: process.env.PASWORD_NODEMAILER,
+                pass: process.env.PASWORD_NODEMAILER,
             },
         };
         const transporter = nodemailer.createTransport(config);

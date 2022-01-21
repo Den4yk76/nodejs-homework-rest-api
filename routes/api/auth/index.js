@@ -10,8 +10,13 @@ import {
     updateSubscription,
     uploadAvatar,
     verification,
+    repeatVerificationEmail,
 } from '../../../controllers/auth';
-import { validateAuth, validateUpdateSubscription } from './validation';
+import {
+    validateAuth,
+    validateUpdateSubscription,
+    validateResendVerifySchema,
+} from './validation';
 
 const router = new Router();
 
@@ -24,5 +29,6 @@ router.patch('/', guard, validateUpdateSubscription, updateSubscription);
 router.patch('/avatars', guard, upload.single('avatar'), uploadAvatar);
 
 router.get('/verify/:verificationToken', verification);
+router.post('/verify', validateResendVerifySchema, repeatVerificationEmail);
 
 export default router;
