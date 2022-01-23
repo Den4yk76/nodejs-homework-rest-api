@@ -1,6 +1,7 @@
 import pkg from 'mongoose';
 import bcrypt from 'bcryptjs';
 import gravatar from 'gravatar';
+import { uuid } from 'uuidv4';
 
 const { Schema, model } = pkg;
 
@@ -33,6 +34,17 @@ const userSchema = new Schema(
         token: {
             type: String,
             default: null,
+        },
+        verificationToken: {
+            type: String,
+            required: [true, 'Verify token is required'],
+            default: function () {
+                return uuid();
+            },
+        },
+        verify: {
+            type: Boolean,
+            default: false,
         },
     },
     {

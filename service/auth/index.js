@@ -7,17 +7,28 @@ class AuthService {
         return !!user;
     }
 
+    async isUserWithToken(verificationToken) {
+        const user = await Users.findByToken(verificationToken);
+        return user;
+    }
+
     async create(body) {
-        const { email, subscription, avatarUrl } = await Users.create(body);
-        return { email, subscription, avatarUrl };
+        const { email, subscription, avatarUrl, verificationToken } =
+            await Users.create(body);
+        return { email, subscription, avatarUrl, verificationToken };
     }
 
     async getUser(email, password) {
         const user = await Users.findByEmail(email);
         const isValidPassword = await user?.isValidPassword(password);
-        if (!isValidPassword) {
+        if (!isValidPassword || !user?.verify) {
             return null;
         }
+        return user;
+    }
+
+    async findByEmail(email) {
+        const user = await Users.findByEmail(email);
         return user;
     }
 
@@ -34,6 +45,10 @@ class AuthService {
 
     async setSubscription(id, subscription) {
         await Users.setSubscription(id, subscription);
+    }
+
+    async verify(userId) {
+        await Users.verify(userId);
     }
 }
 
