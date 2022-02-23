@@ -7,13 +7,13 @@ class EmailService {
                 this.link = 'https://492b-91-239-82-186.ngrok.io';
                 break;
             case 'test':
-                this.link = 'http://localhost:5000/';
+                this.link = 'http://localhost:5000';
                 break;
             case 'production':
-                this.link = 'http://heroku/';
+                this.link = 'https://d76-rest-api.herokuapp.com';
                 break;
             default:
-                this.link = 'http://localhost:3000/';
+                this.link = 'http://localhost:3000';
         }
     }
 
